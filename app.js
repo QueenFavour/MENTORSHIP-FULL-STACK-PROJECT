@@ -11,7 +11,6 @@ if (!process.env.MONGO_URI) {
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-
 app.use(express.json());
 
 app.get('/api/profile', (req, res) => {
