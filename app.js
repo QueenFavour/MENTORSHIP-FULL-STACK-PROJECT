@@ -1,17 +1,32 @@
-const cors = require("cors"); app.use(cors());
-require('dotenv').config(); // Load env vars
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require("cors");
+require('dotenv').config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 console.log("process.env.MONGO_URI:", process.env.MONGO_URI);
 
 if (!process.env.MONGO_URI) {
-  console.error("MONGO_URI is missing! Check your .env file.");
-  process.exit(1); // Stop the app
+  console.error("MONGO_URI is missing. Check your .env file.");
+  process.exit(1);
 }
 
-const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
-app.use(express.json());
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Database connected successfully'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+const Message = mongoose.model('Message', new mongoose.Schema({
+  name: { type: String, required: true },
+  content: { type: String, required: true }
+}));
+
+app.get("/", (req, res) => {
+  res.send("Mentorship Backend is live");
+});
 
 app.get('/api/profile', (req, res) => {
   const userProfile = {
@@ -21,30 +36,13 @@ app.get('/api/profile', (req, res) => {
     location: 'Lagos, Nigeria',
     skills: ['Scheduling', 'Research', 'Social Media', 'Notion', 'Google Workspace']
   };
-
   res.json(userProfile);
 });
 
-// Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log(' Database connected successfully'))
-  .catch((err) => console.error(' MongoDB connection error:', err));
-
-// Sample Mongoose model
-const Message = mongoose.model('Message', new mongoose.Schema({
-  name: { type: String, required: true },
-  content: { type: String, required: true }
-}));
-
-// Test route
 app.get('/api/test', (req, res) => {
-  res.json({ message: 'API working fine!' });
-});
-app.get("/", (req, res) => {
-  res.send("Mentorship Backend is live");
+  res.json({ message: 'API working fine' });
 });
 
-// Create new message
 app.post('/api/messages', async (req, res) => {
   try {
     const newMessage = new Message(req.body);
@@ -56,4 +54,4 @@ app.post('/api/messages', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(Server running on port ${PORT}));
