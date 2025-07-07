@@ -1,11 +1,29 @@
-// app.js
+require('dotenv').config(); // Load env vars
+
+console.log("process.env.MONGO_URI:", process.env.MONGO_URI);
+
+if (!process.env.MONGO_URI) {
+  console.error("MONGO_URI is missing! Check your .env file.");
+  process.exit(1); // Stop the app
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
 const app = express();
+
 app.use(express.json());
+
+app.get('/api/profile', (req, res) => {
+  const userProfile = {
+    name: 'Favour Folade',
+    email: 'favourfolade@gmail.com',
+    role: 'Executive Assistant',
+    location: 'Lagos, Nigeria',
+    skills: ['Scheduling', 'Research', 'Social Media', 'Notion', 'Google Workspace']
+  };
+
+  res.json(userProfile);
+});
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI)
@@ -36,5 +54,3 @@ app.post('/api/messages', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
-
-// This is a test change
