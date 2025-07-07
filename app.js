@@ -40,6 +40,9 @@ const Message = mongoose.model('Message', new mongoose.Schema({
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API working fine!' });
 });
+app.get("/", (req, res) => {
+  res.send("Mentorship Backend is live");
+});
 
 // Create new message
 app.post('/api/messages', async (req, res) => {
