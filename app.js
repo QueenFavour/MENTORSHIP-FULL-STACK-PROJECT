@@ -1,3 +1,4 @@
+const cors = require("cors"); app.use(cors());
 require('dotenv').config(); // Load env vars
 
 console.log("process.env.MONGO_URI:", process.env.MONGO_URI);
