@@ -1,12 +1,28 @@
+require('dotenv').config();
+console.log("JWT_SECRET from .env:",process.env.JWT_SECRET);
+
 const express = require('express');
+const authRoutes = require("./routes/AuthRoutes");
 const mongoose = require('mongoose');
 const cors = require("cors");
-require('dotenv').config();
+
 
 const app = express();
 
 app.use(cors());
+
 app.use(express.json());
+
+
+const allowOrigin =["https://mentorshipfrontend.vercel.app/","http://localhost:5173"]
+app.use(cors({
+    origin:allowOrigin,
+    credentials:true,
+    methods:["GET", "PUT", "DELETE", "POST"],
+    allowedHeaders:["content-type", "Authorization"]
+}))
+app.use("/api/auth", authRoutes);
+
 
 console.log("process.env.MONGO_URI:", process.env.MONGO_URI);
 
